@@ -1,25 +1,28 @@
 import Extension from "./extension"
 
 export interface ExtensionContext {
-    extension: Extension
+	extension: Extension
 }
 
 let currentContext: ExtensionContext | null = null
 
 export const setCurrentContext = (extension: Extension) => {
-    currentContext = { extension }
+	currentContext = { extension }
 }
 
 export const getCurrentContext = () => {
-    return currentContext
+	return currentContext
 }
 
 export const clearCurrentContext = () => {
-    currentContext = null
+	currentContext = null
 }
 
-export const useExtensionContext = (extension: Extension, action: ((context: ExtensionContext | null) => void)) => {
-    setCurrentContext(extension)
-    action?.(getCurrentContext())
-    clearCurrentContext()
+export const useExtensionContext = (
+	extension: Extension,
+	action: (context: ExtensionContext | null) => void,
+) => {
+	setCurrentContext(extension)
+	action?.(getCurrentContext())
+	clearCurrentContext()
 }

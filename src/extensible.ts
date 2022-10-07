@@ -1,8 +1,8 @@
 import Extension from "./extension"
 import { injectable, injected, inject, initInjection } from "./inject"
-import { setCurrentContext, getCurrentContext, clearCurrentContext, useExtensionContext } from './context'
+import { useExtensionContext } from "./context"
 import { Key } from "./utils"
-import { hook, hookable, initHook, emit, HookAction } from './hook'
+import { hook, hookable, initHook, emit, HookAction } from "./hook"
 
 export type Set = <T>(key: string | symbol, value: T) => T
 export type Get = <T = any>(key: string | symbol) => T | undefined
@@ -42,7 +42,7 @@ export function createExtensible(name: string, init?: InitExtensible): Extensibl
 	const baseExtensionID = Symbol()
 	const baseExtension: Extension = {
 		id: baseExtensionID,
-		name
+		name,
 	}
 
 	const extensible = {
@@ -60,8 +60,7 @@ export function createExtensible(name: string, init?: InitExtensible): Extensibl
 	} as Extensible
 
 	// Init Injection System
-	extensible.injectable = <T = any>(name: Key): (() => T) =>
-		injectable<T>(extensible, name)
+	extensible.injectable = <T = any>(name: Key): (() => T) => injectable<T>(extensible, name)
 	extensible.injected = <T = any>(name: Key, simplify = true): T =>
 		injected<T>(extensible, name, simplify)
 	extensible.inject = <T = any>(name: Key, content: T): void =>
@@ -69,7 +68,10 @@ export function createExtensible(name: string, init?: InitExtensible): Extensibl
 	initInjection(extensible)
 
 	// Init Hook System
-	extensible.hook = <T = any>(name: Key, func: () => void | ((payload?: T | undefined) => void)) => hook(extensible, name, func)
+	extensible.hook = <T = any>(
+		name: Key,
+		func: () => void | ((payload?: T | undefined) => void),
+	) => hook(extensible, name, func)
 	extensible.hookable = <T = any>(name: Key) => hookable<T>(extensible, name)
 	extensible.emit = <T = any>(name: Key, payload: T) => emit(extensible, name, payload)
 	initHook(extensible)

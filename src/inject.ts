@@ -25,11 +25,7 @@ export const initInjection = (extensible: Extensible) => {
 	extensible.set(INJECTION, {})
 }
 
-export const injected = <T = any>(
-	extensible: Extensible,
-	name: Key,
-	simplify = true,
-): T => {
+export const injected = <T = any>(extensible: Extensible, name: Key, simplify = true): T => {
 	if (simplify) {
 		const cache = extensible.get(INJECTION_CACHE)
 
@@ -38,8 +34,8 @@ export const injected = <T = any>(
 			return extensible.set(
 				INJECTION_CACHE,
 				extensible
-					.get(INJECTION)[name]
-					// .map((item: Injection) => item),
+					.get(INJECTION)
+					[name] // .map((item: Injection) => item),
 					.map((item: Injection) => item.content),
 			)
 	}
@@ -50,7 +46,7 @@ export const injected = <T = any>(
 export const inject = <T>(extensible: Extensible, name: Key, content: T) => {
 	const injection = {
 		content,
-		extension: getCurrentContext()?.extension
+		extension: getCurrentContext()?.extension,
 	}
 
 	const injectedList = extensible.get(INJECTION)[name]
