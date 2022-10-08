@@ -3,7 +3,7 @@ import { injectable, injected, inject, initInjection } from "./inject"
 import { getCurrentContext, useExtensionContext } from "./context"
 import { ID, Key } from "./utils"
 import { hook, hookable, initHook, emit, HookAction } from "./hook"
-import { OnRequire, require } from "./require"
+import { OnRequire, requireAnother } from "./require"
 
 export type Set = <T>(key: Key, value: T) => T
 export type Get = <T = any>(
@@ -102,7 +102,7 @@ export function createExtensible(init?: InitExtensible): Extensible {
 				extensible,
 				extension,
 				<T = any>(id: ID, description: T) =>
-					require(installed, onRequires, id, description),
+					requireAnother(installed, onRequires, id, description),
 				(currentContext) => extension.setup?.(currentContext),
 			)
 			installed.push(extension)
@@ -134,7 +134,7 @@ export function createExtensible(init?: InitExtensible): Extensible {
 		extensible,
 		baseExtension,
 		<T = any>(id: ID, description: T) =>
-			require(installed, onRequires, id, description),
+			requireAnother(installed, onRequires, id, description),
 		() => init?.(extensible),
 	)
 

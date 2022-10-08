@@ -11,7 +11,7 @@ export type OnRequire<T = any> = (
 
 export type Require = <T = any>(id: ID, description?: T) => boolean
 
-export const require = <T = any>(
+export const requireAnother = <T = any>(
 	installed: Extension[],
 	onRequires: OnRequire<T>[],
 	id: ID,

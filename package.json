@@ -1,13 +1,15 @@
 {
 	"name": "xtense",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
 		"lint": "eslint . --ext .ts",
 		"format": "prettier . --write",
 		"test": "vitest",
-		"coverage": "vitest run --coverage"
+		"coverage": "vitest run --coverage",
+		"build": "npm run build:types && npm run build:js",
+		"build:js": "vite build",
+		"build:types": "tsc -m amd -t ESNext -d --isolatedModules false  --moduleResolution node --esModuleInterop --jsx react --outFile dist/index.js src/index.ts && rm -rf dist/index.js"
 	},
 	"devDependencies": {
 		"@types/node": "^18.8.3",
@@ -23,10 +25,9 @@
 	},
 	"exports": {
 		".": {
-			"import": "./src/index.ts"
-		},
-		"./js": {
-			"import": "./dist/index.mjs"
+			"import": "./src/index.mjs",
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.js"
 		}
 	}
 }
