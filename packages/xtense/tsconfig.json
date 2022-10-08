@@ -15,7 +15,7 @@
 		"noImplicitReturns": true,
 		"skipLibCheck": true
 	},
-	"include": ["src", "examples/basic/src"],
+	"include": ["src"],
 	"references": [
 		{
 			"path": "./tsconfig.node.json"

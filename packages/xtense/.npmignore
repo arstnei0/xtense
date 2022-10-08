@@ -6,3 +6,4 @@ index.html
 .prettier.json
 vite.config.test
 .eslintrc.js
+examples/

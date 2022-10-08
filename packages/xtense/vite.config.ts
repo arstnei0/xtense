@@ -7,9 +7,9 @@ export default defineConfig({
 			entry: resolve(__dirname, "src/index.ts"),
 			name: "xtense",
 			fileName: "index",
-			formats: ["es", "cjs"],
+			formats: ["es"],
 		},
 		minify: true,
-		emptyOutDir: false
+		emptyOutDir: false,
 	},
 })
