@@ -3,6 +3,11 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-    - before: pnpm set git-checks false
+    - before: cd packages/xtense && pnpm set git-checks false
       init: pnpm install && pnpm run build
-      command: npm run dev
+      command: pnpm run dev
+
+ports:
+  - port: 5173
+    visibility: private
+    onOpen: open-browser

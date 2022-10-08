@@ -16,7 +16,7 @@ const extension: Extension = {
             log('Test hook runs successfully!')
         })
 
-        inject('test injection', prompt('Input Injection:'))
+        inject('test injection', prompt('Input Injection(This is a part of the XTense Example. You can type whatever you want.):'))
     }
 }
 
