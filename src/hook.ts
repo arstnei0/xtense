@@ -16,13 +16,13 @@ export const initHook = (extensible: Extensible) => {
 	extensible.set(HOOK, {})
 }
 
-export const emit = <T = any>(extensible: Extensible, name: Key, payload?: T) => {
+export const emit = <T = any>(
+	extensible: Extensible,
+	name: Key,
+	payload?: T,
+) => {
 	extensible.get(HOOK)[name]?.forEach((hook: Hook<T>) => {
-		try {
-			hook?.action?.(payload)
-		} catch (e) {
-			console.error("XTEns")
-		}
+		hook?.action?.(payload)
 	})
 }
 
@@ -32,7 +32,11 @@ export const hookable = <T = any>(extensible: Extensible, name: Key) => {
 	return (payload: T) => emit(extensible, name, payload)
 }
 
-export const hook = <T = any>(extensible: Extensible, name: Key, func: HookAction<T>) => {
+export const hook = <T = any>(
+	extensible: Extensible,
+	name: Key,
+	func: HookAction<T>,
+) => {
 	extensible.get(HOOK)[name]?.push({
 		extension: getCurrentContext()?.extension,
 		action: func,

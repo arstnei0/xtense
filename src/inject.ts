@@ -16,7 +16,7 @@ export interface Injection {
 }
 
 export const injectable = <T = any>(extensible: Extensible, name: Key) => {
-	extensible.get(INJECTION)[name] = []
+	if (!extensible.get(INJECTION)[name]) extensible.get(INJECTION)[name] = []
 
 	return (): T => extensible.get(INJECTION)[name]
 }
@@ -25,7 +25,11 @@ export const initInjection = (extensible: Extensible) => {
 	extensible.set(INJECTION, {})
 }
 
-export const injected = <T = any>(extensible: Extensible, name: Key, simplify = true): T => {
+export const injected = <T = any>(
+	extensible: Extensible,
+	name: Key,
+	simplify = true,
+): T => {
 	if (simplify) {
 		const cache = extensible.get(INJECTION_CACHE)
 

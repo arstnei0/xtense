@@ -7,25 +7,40 @@ const extensible = createExtensible("testApp", ({ injectable, hookable }) => {
 	hookable("th")
 })
 
-extensible.use({
+extensible.install({
 	id: "test",
 	name: "test",
 	setup(extensible) {
 		extensible.inject("test", () => {
 			log("running in test context injection")
 		})
-		extensible.hook("th", (payload: string) => {
+
+		extensible.hook("th", (payload?: string) => {
 			log("running in test context hook")
 			log(`received: ${payload}`)
-			throw new Error("aaaa")
+		})
+
+		extensible.subscribe<string>("s", (oldValue, newValue) => {
+			log("detect 's' changed at extension context")
+			log(`change from ${oldValue || "nothing"} to ${newValue}`)
 		})
 	},
 })
+
+log()
 
 extensible.injected<() => void>("test", false).forEach((item: any) => {
 	item?.content?.()
 })
 
+log()
+
 extensible.emit("th", '"message sent from extensible"')
+
+log()
+
+log('main context changing "s"')
+extensible.set("s", "new new new new new value")
+log("changed")
 
 outputLogs()

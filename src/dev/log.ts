@@ -2,8 +2,8 @@ import "./log.css"
 
 export const logList = [] as string[]
 
-export default function log(str: string) {
-	logList.push(str)
+export default function log(str?: string) {
+	logList.push(str || "")
 }
 
 export function outputLogs() {
