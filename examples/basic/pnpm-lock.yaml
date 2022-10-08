@@ -3,10 +3,10 @@ lockfileVersion: 5.4
 specifiers:
   typescript: ^4.6.4
   vite: ^3.1.0
-  xtense: ^0.0.1
+  xtense: ^0.0.2
 
 dependencies:
-  xtense: 0.0.1
+  xtense: 0.0.2
 
 devDependencies:
   typescript: 4.8.4
@@ -349,8 +349,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /xtense/0.0.1:
-    resolution: {integrity: sha512-c0e9rKe9SUIWH1NPPXh9Jz70OpiYnDK4I6MMUQ+nuAZ25Ggyw71o9swpkqUAUtOwomWca46PwtxYQYb7YR3/ww==}
+  /xtense/0.0.2:
+    resolution: {integrity: sha512-91ZoHi0e3Q9biuY+JoYpWIKIx0Eamp7ob4CjdhWWpuAcvjCOij+UjiAFA+RsE4qMo3gtznZTaRJ8GiiO4mQuIw==}
     dependencies:
       typescript: 4.8.4
     dev: false

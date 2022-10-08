@@ -13,6 +13,6 @@
     "vite": "^3.1.0"
   },
   "dependencies": {
-    "xtense": "^0.0.1"
+    "xtense": "^0.0.2"
   }
 }

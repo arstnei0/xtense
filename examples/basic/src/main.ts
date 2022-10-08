@@ -1,4 +1,4 @@
-import { createExtensible } from 'xtense'
+import {} from 'xtense'
 
 const extensible = createExtensible(({}) => {
 
