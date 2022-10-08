@@ -1,0 +1,8 @@
+.vscode/
+src/dev/
+src/test/
+index.html
+.gitpod.yml
+.prettier.json
+vite.config.test
+.eslintrc.js

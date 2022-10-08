@@ -5,7 +5,7 @@ const extensible = createExtensible(({ injectable, hookable, onRequire }) => {
 	log("init")
 	injectable("test")
 	hookable("th")
-	
+
 	onRequire((extension, isInstalled, id, description) => {
 		log(`${String(extension.id)} is requiring ${String(id)}`)
 
@@ -25,14 +25,21 @@ extensible.install({
 			log(`received: ${payload}`)
 		})
 
-		const unsubscribe = context.subscribe<string>("s", (oldValue, newValue) => {
-			log("detect 's' changed at extension context")
-			log(`change from ${oldValue || "nothing"} to ${newValue}`)
-		})
+		const unsubscribe = context.subscribe<string>(
+			"s",
+			(oldValue, newValue) => {
+				log("detect 's' changed at extension context")
+				log(`change from ${oldValue || "nothing"} to ${newValue}`)
+			},
+		)
 
 		unsubscribe()
 
-		log(context.require('required extension') ? 'installed' : 'not installed')
+		log(
+			context.require("required extension")
+				? "installed"
+				: "not installed",
+		)
 	},
 })
 

@@ -47,15 +47,13 @@ export interface Extensible {
 	onRequire: <T = any>(func: OnRequire<T>) => void
 }
 
-export function createExtensible(
-	init?: InitExtensible,
-): Extensible {
+export function createExtensible(init?: InitExtensible): Extensible {
 	const store = {}
 	const subscriptions = {}
 	const installed = [] as Extension[]
 	const onRequires = [] as OnRequire[]
 
-	const baseExtensionID = 'base'
+	const baseExtensionID = "base"
 	const baseExtension: Extension = {
 		id: baseExtensionID,
 	}
@@ -100,8 +98,13 @@ export function createExtensible(
 			}
 		},
 		install(extension) {
-			useExtensionContext(extensible, extension, <T = any>(id: ID, description: T) => require(installed, onRequires, id, description)
-			, (currentContext) => extension.setup?.(currentContext))
+			useExtensionContext(
+				extensible,
+				extension,
+				<T = any>(id: ID, description: T) =>
+					require(installed, onRequires, id, description),
+				(currentContext) => extension.setup?.(currentContext),
+			)
 			installed.push(extension)
 		},
 	} as Extensible
@@ -127,7 +130,13 @@ export function createExtensible(
 		onRequires.push(func)
 	}
 
-	useExtensionContext(extensible, baseExtension, <T = any>(id: ID, description: T) => require(installed, onRequires, id, description), () => init?.(extensible))
+	useExtensionContext(
+		extensible,
+		baseExtension,
+		<T = any>(id: ID, description: T) =>
+			require(installed, onRequires, id, description),
+		() => init?.(extensible),
+	)
 
 	return extensible
 }

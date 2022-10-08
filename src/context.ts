@@ -9,11 +9,15 @@ export interface ExtensionContext extends Extensible {
 
 let currentContext: ExtensionContext | null = null
 
-export const setCurrentContext = (extensible:Extensible, extension: Extension, require: Require) => {
+export const setCurrentContext = (
+	extensible: Extensible,
+	extension: Extension,
+	require: Require,
+) => {
 	currentContext = {
 		...extensible,
 		extension,
-		require
+		require,
 	}
 }
 
@@ -26,7 +30,9 @@ export const clearCurrentContext = () => {
 }
 
 export const useExtensionContext = (
-	extensible:Extensible, extension: Extension, require: Require,
+	extensible: Extensible,
+	extension: Extension,
+	require: Require,
 	action: (context: ExtensionContext) => void,
 ) => {
 	setCurrentContext(extensible, extension, require)
