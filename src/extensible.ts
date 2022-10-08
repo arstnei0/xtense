@@ -11,7 +11,7 @@ export type Injectable = <T = any>(name: Key) => () => T
 export type Injected = <T = any>(name: Key, simplify?: boolean) => T[]
 export type Inject = <T>(name: Key, content: T) => void
 
-export type Hook = <T = any>(name: Key, func: HookAction) => void
+export type Hook = <T = any>(name: Key, func: HookAction<T>) => void
 export type Hookable = <T = any>(name: Key) => (payload: T) => void
 export type Emit = <T = any>(name: Key, payload?: T) => void
 
@@ -60,21 +60,18 @@ export function createExtensible(name: string, init?: InitExtensible): Extensibl
 	} as Extensible
 
 	// Init Injection System
+	initInjection(extensible)
 	extensible.injectable = <T = any>(name: Key): (() => T) => injectable<T>(extensible, name)
 	extensible.injected = <T = any>(name: Key, simplify = true): T =>
 		injected<T>(extensible, name, simplify)
 	extensible.inject = <T = any>(name: Key, content: T): void =>
 		inject<T>(extensible, name, content)
-	initInjection(extensible)
 
 	// Init Hook System
-	extensible.hook = <T = any>(
-		name: Key,
-		func: () => void | ((payload?: T | undefined) => void),
-	) => hook(extensible, name, func)
-	extensible.hookable = <T = any>(name: Key) => hookable<T>(extensible, name)
-	extensible.emit = <T = any>(name: Key, payload: T) => emit(extensible, name, payload)
 	initHook(extensible)
+	extensible.hook = <T = any>(name: Key, func: HookAction<T>) => hook(extensible, name, func)
+	extensible.hookable = <T = any>(name: Key) => hookable<T>(extensible, name)
+	extensible.emit = <T = any>(name: Key, payload: T) => emit<T>(extensible, name, payload)
 
 	useExtensionContext(baseExtension, () => init?.(extensible))
 

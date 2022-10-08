@@ -5,19 +5,19 @@ import { Key } from "./utils"
 
 const HOOK = Symbol()
 
-export interface Hook {
+export interface Hook<T = any> {
 	extension: Extension
-	action: HookAction
+	action: HookAction<T>
 }
 
-export type HookAction = (payload?: any) => any
+export type HookAction<T = any> = (payload?: T) => any
 
 export const initHook = (extensible: Extensible) => {
 	extensible.set(HOOK, {})
 }
 
 export const emit = <T = any>(extensible: Extensible, name: Key, payload?: T) => {
-	extensible.get(HOOK)[name]?.forEach((hook: Hook) => {
+	extensible.get(HOOK)[name]?.forEach((hook: Hook<T>) => {
 		try {
 			hook?.action?.(payload)
 		} catch (e) {
@@ -32,7 +32,7 @@ export const hookable = <T = any>(extensible: Extensible, name: Key) => {
 	return (payload: T) => emit(extensible, name, payload)
 }
 
-export const hook = <T = any>(extensible: Extensible, name: Key, func: HookAction) => {
+export const hook = <T = any>(extensible: Extensible, name: Key, func: HookAction<T>) => {
 	extensible.get(HOOK)[name]?.push({
 		extension: getCurrentContext()?.extension,
 		action: func,
