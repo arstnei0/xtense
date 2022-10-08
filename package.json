@@ -25,6 +25,9 @@
 	"exports": {
 		".": {
 			"import": "./src/index.ts"
+		},
+		"./js": {
+			"import": "./dist/index.mjs"
 		}
 	}
 }

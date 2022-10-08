@@ -1,8 +1,9 @@
 import Extension from "./extension"
 import { injectable, injected, inject, initInjection } from "./inject"
 import { getCurrentContext, useExtensionContext } from "./context"
-import { Key } from "./utils"
+import { ID, Key } from "./utils"
 import { hook, hookable, initHook, emit, HookAction } from "./hook"
+import { OnRequire, require } from "./require"
 
 export type Set = <T>(key: Key, value: T) => T
 export type Get = <T = any>(
@@ -25,11 +26,9 @@ export type Hook = <T = any>(name: Key, func: HookAction<T>) => void
 export type Hookable = <T = any>(name: Key) => (payload: T) => void
 export type Emit = <T = any>(name: Key, payload?: T) => void
 
-export type InitExtensible = (context: Extensible) => void
+export type InitExtensible = (extensible: Extensible) => void
 
 export type Install = (extension: Extension) => void
-
-export interface ExtensibleContext extends Extensible {}
 
 export interface Extensible {
 	set: Set
@@ -45,19 +44,20 @@ export interface Extensible {
 	emit: Emit
 
 	install: Install
+	onRequire: <T = any>(func: OnRequire<T>) => void
 }
 
 export function createExtensible(
-	name: string,
 	init?: InitExtensible,
 ): Extensible {
 	const store = {}
 	const subscriptions = {}
+	const installed = [] as Extension[]
+	const onRequires = [] as OnRequire[]
 
-	const baseExtensionID = Symbol()
+	const baseExtensionID = 'base'
 	const baseExtension: Extension = {
 		id: baseExtensionID,
-		name,
 	}
 
 	const extensible = {
@@ -92,7 +92,7 @@ export function createExtensible(
 			else {
 				Reflect.set(subscriptions, key, [subscription])
 				index = 0
-				subscribers = Reflect.get(subscription, key)
+				subscribers = Reflect.get(subscriptions, key)
 			}
 
 			return () => {
@@ -100,7 +100,9 @@ export function createExtensible(
 			}
 		},
 		install(extension) {
-			useExtensionContext(extension, () => extension.setup?.(extensible))
+			useExtensionContext(extensible, extension, <T = any>(id: ID, description: T) => require(installed, onRequires, id, description)
+			, (currentContext) => extension.setup?.(currentContext))
+			installed.push(extension)
 		},
 	} as Extensible
 
@@ -121,7 +123,11 @@ export function createExtensible(
 	extensible.emit = <T = any>(name: Key, payload: T) =>
 		emit<T>(extensible, name, payload)
 
-	useExtensionContext(baseExtension, () => init?.(extensible))
+	extensible.onRequire = <T = any>(func: OnRequire<T>) => {
+		onRequires.push(func)
+	}
+
+	useExtensionContext(extensible, baseExtension, <T = any>(id: ID, description: T) => require(installed, onRequires, id, description), () => init?.(extensible))
 
 	return extensible
 }

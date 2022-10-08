@@ -1,13 +1,20 @@
+import { Extensible } from "./extensible"
 import Extension from "./extension"
+import { Require } from "./require"
 
-export interface ExtensionContext {
+export interface ExtensionContext extends Extensible {
 	extension: Extension
+	require: Require
 }
 
 let currentContext: ExtensionContext | null = null
 
-export const setCurrentContext = (extension: Extension) => {
-	currentContext = { extension }
+export const setCurrentContext = (extensible:Extensible, extension: Extension, require: Require) => {
+	currentContext = {
+		...extensible,
+		extension,
+		require
+	}
 }
 
 export const getCurrentContext = () => {
@@ -19,10 +26,10 @@ export const clearCurrentContext = () => {
 }
 
 export const useExtensionContext = (
-	extension: Extension,
-	action: (context: ExtensionContext | null) => void,
+	extensible:Extensible, extension: Extension, require: Require,
+	action: (context: ExtensionContext) => void,
 ) => {
-	setCurrentContext(extension)
-	action?.(getCurrentContext())
+	setCurrentContext(extensible, extension, require)
+	action?.(getCurrentContext() as ExtensionContext)
 	clearCurrentContext()
 }

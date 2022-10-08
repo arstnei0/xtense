@@ -1,29 +1,38 @@
 import { createExtensible } from ".."
 import log, { outputLogs } from "./log"
 
-const extensible = createExtensible("testApp", ({ injectable, hookable }) => {
+const extensible = createExtensible(({ injectable, hookable, onRequire }) => {
 	log("init")
 	injectable("test")
 	hookable("th")
+	
+	onRequire((extension, isInstalled, id, description) => {
+		log(`${String(extension.id)} is requiring ${String(id)}`)
+
+		// return true
+	})
 })
 
 extensible.install({
 	id: "test",
-	name: "test",
-	setup(extensible) {
-		extensible.inject("test", () => {
+	setup(context) {
+		context.inject("test", () => {
 			log("running in test context injection")
 		})
 
-		extensible.hook("th", (payload?: string) => {
+		context.hook("th", (payload?: string) => {
 			log("running in test context hook")
 			log(`received: ${payload}`)
 		})
 
-		extensible.subscribe<string>("s", (oldValue, newValue) => {
+		const unsubscribe = context.subscribe<string>("s", (oldValue, newValue) => {
 			log("detect 's' changed at extension context")
 			log(`change from ${oldValue || "nothing"} to ${newValue}`)
 		})
+
+		unsubscribe()
+
+		log(context.require('required extension') ? 'installed' : 'not installed')
 	},
 })
 
